@@ -18,11 +18,14 @@ const announceDate = (()=>{
   );
   return function() {
     const now = new Date();
+    const month = now.toLocaleDateString("en-US", {month: "long"}),
+      day = now.getDate(),
+      year = now.getFullYear();
     const hours = now.getHours(),
       mins = now.getMinutes();
-    return `Today's date is ${
-      now.toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric"})
-    }. It is ${hourNames[hours % 12]} ${minNames[mins]} ${
+    return `Today's date is ${month} ${day}${
+      (day > 20 || day < 10) && day % 10 < 4 ? ["th", "st", "nd", "rd"][day % 10] : "th"
+    }, ${year}. It is ${hourNames[hours % 12]} ${minNames[mins]} ${
       hours < 6 || hours > 20 ? "at night"
       : hours < 12 ? "in the morning"
       : hours < 18 ? "in the afternoon" : "in the evening"
