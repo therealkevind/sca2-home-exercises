@@ -5,7 +5,7 @@ const reverse = function(str) {
 };
 
 const factorial = function(num) {
-  return Array.from({length: num}, (_, i) => i+1).reduce((a, i) => a*i);
+  return Array.from({length: num}, (_, i) => i+1).reduce((a, i) => a*i, 1);
 };
 
 const announceDate = (()=>{
