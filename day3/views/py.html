@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Day 3</title>
+    <link href="styles.css" type="text/css" rel="stylesheet" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a>Python</a>
+        <a href="/js">JavaScript</a>
+      </nav>
+    </header>
+    <div id="main-content">
+      <h1>Python code</h1>
+      <img src="https://www.python.org/static/community_logos/python-logo-generic.svg" width=300>
+      <p>Here's a few of the more interesting snippets I've written. In no particular order:</p>
+<pre>
+# connec_four.py
+#
+# Implements a command-line version of the classic game "<a href="https://en.wikipedia.org/wiki/Connect_Four">Connec Four</a>"
+
+from sys import argv
+from os import remove
+run = True
+
+tokens = dict(zip(range(1,9**999),["X","O","Δ","◻","◼","◰","◵","◲","◷","◱","◶","◳","◴","◸","◹","◺","◿"]+[chr(x) for x in range(9617,9712)]))
+tokens[None]="."
+
+try:
+    with open("connec_four.txt") as guessing: board = guessing.read()
+    
+    if argv[-1]=="/restart" and input("Are you sure you wish to restart? (y) ")=="y": remove("connec_four.txt"); argv = argv[:-1]; raise FileNotFoundError("Restart required")
+    
+    print("Welcome to Connec Four!\nResuming game...")
+    
+    PLAYERS = int(board.split("\n")[0])
+    board = [[int(j) if j else None for j in i.split("|")[1:-1]] for i in board.split("\n")[1:-1]]
+    
+    BOARD_WIDTH = len(board[0]); BOARD_HEIGHT = len(board)
+    
+    if any(len(i) != BOARD_WIDTH for i in board): raise RuntimeError("Cheater detected")
+    
+    turn = len([j for i in board for j in i if j is not None])
+    
+except FileNotFoundError:
+    print("Welcome to Connec Four!"); turn = 0
+    try: BOARD_WIDTH = int(argv[1]) if len(argv)>1 else 7; BOARD_HEIGHT = int(argv[2]) if len(argv)>2 else 6; PLAYERS = int(argv[3]) if len(argv) > 3 else 2
+    except ValueError: print("Command line usage: python connec_four.py [board_width [board_height [num_players]]] [/restart]"); run = False
+    
+    if PLAYERS == 1: print("Playing Connec Four by yourself is lame. You should make some friends."); run = False
+    elif PLAYERS < 1: print("Sorry, I don't know how to play Connec Four."); run = False
+    else: print("Starting new game...")
+    
+    if BOARD_WIDTH*BOARD_HEIGHT < PLAYERS*4 or any(x < 4 for x in (BOARD_WIDTH,BOARD_HEIGHT)): print("With these parameters it is impossible to Connec Four."); run = False
+    
+    board = [[None]*BOARD_WIDTH for i in range(BOARD_HEIGHT)]
+    
+    if run: open("connec_four.txt","x").close()
+    
+except: raise RuntimeError("Cheater detected") from None
+    
+def print_board(player="_", board=board):
+    """Prints the game state to the terminal"""
+    log = len(str(int(BOARD_WIDTH)))
+    print(
+        "."+(BOARD_WIDTH*(1+log)+1)*"-"
+        +".\n|"+("PLAYER: "+str(player)).center(BOARD_WIDTH*(1+log)+1)
+        +"|\n| "+"".join(str(i+1).center(log+1) for i in range(BOARD_WIDTH))
+        +"|\n|"+(BOARD_WIDTH*(1+log)+1)*"-"
+        +"|\n"+"\n".join("| "+"".join(tokens[i].center(log+1) for i in row)+"|" for row in board)+"\n'"+(BOARD_WIDTH*(1+log)+1)*"-"+"'")
+    with open("connec_four.txt","w") as connec: print(str(PLAYERS)+"\n"+"\n".join("|"+"|".join(str(i) if i is not None else "" for i in row)+"|" for row in board), file=connec)
+
+def get_move():
+    """Validates and returns player's input"""
+    column = input("Column number: ")
+    while not (column.isdigit() and 1<=int(column)<=BOARD_WIDTH and board[0][int(column)-1] is None): column = input("Invalid input. Enter a column number: ")
+    return int(column)
+
+
+def make_move(player, column):
+    """Insert a token for `player` in the given column of the
+    board. Return True if that is a winning move and False
+    otherwise.
+    """
+    
+    x = column - 1; y = -1
+    for i in reversed(range(len(board))):
+        if board[i][x] is None: board[i][x] = player; y = i; break
+    
+    if y > -1:
+        xR = range(min(x+1,BOARD_WIDTH-3)); yR = range(min(y+1,BOARD_HEIGHT-3)); xRange = range(x-3,x+1); yRange = range(y-3,y+1);
+        return (
+            any(i in xR and board[y][i] is not None and len(frozenset(board[y][j] for j in range(i,i+4)))==1 for i in xRange)
+            or any(i in yR and board[i][x] is not None and len(frozenset(j[x] for j in board[i:i+4]))==1 for i in yRange)
+            or any(i in xR and j in yR and board[j][i] is not None and len(frozenset(board[j+n][i+n] for n in range(0,4)))==1 for (i,j) in zip(xRange, yRange))
+            or any(i in xR and 3<=j&lt;BOARD_HEIGHT and board[j][i] is not None and len(frozenset(board[j-n][i+n] for n in range(0,4)))==1 for (i,j) in zip(xRange, range(y+3,y-1,-1)))
+        )
+    return False
+
+
+def main():
+    """Implements the game loop including input and output"""
+    
+    if PLAYERS >= 10: print("Battle royale mode initiated.")
+    
+    global turn
+    
+    while turn&lt;BOARD_HEIGHT*BOARD_WIDTH:
+        print_board(turn%PLAYERS+1)
+        if make_move(turn%PLAYERS+1, get_move()): print_board(turn%PLAYERS+1); print("Player "+str(turn%PLAYERS+1)+" won!"); remove("connec_four.txt"); return
+        turn += 1
+    print_board(); print("It's a draw!")
+
+
+if run and __name__ == "__main__":
+    try: main()
+    except KeyboardInterrupt: print("\nGame saved successfully.")
+</pre>
+      <p>
+        A one-liner that implements a <a href="https://lab.cs50.io/hsadev/sca/master/day0/pset/fractionalcalc/">fractional calculator</a>:
+      </p>
+<pre>
+from fractions import Fraction as f; import re; print(eval("".join((f"f('{i}')" if i[0] in "0123456789" else i[0]+"f('"+i[1:]+"')") if len(i)>1 else i for i in re.split("(?=[+\\-*/^x()])","".join(""if i.isspace() else i for i in input("Expression: ").replace("x","*").replace("^","**"))))))
+</pre>
+      <p>
+        A Vigenére implementation, with the enciphering part in one line:
+      </p>
+<pre>
+import sys
+def main():
+    if len(sys.argv)!=2:
+        print("wrong arg count")
+        return 1
+    k = sys.argv[1]; 
+    if not k.isalpha():
+        print("bad arg")
+        return 1
+    print("key: "+k);
+    p = input("plaintext: "); j = 0
+    
+    print("".join(chr(((ord(i.upper())-130+ord(k[((j:=j+1)-1)%len(k)]))%26+26)%26+(97 if i.islower() else 65)) if i.isalpha() else i for i in p))
+    return 0
+
+if __name__ == "__main__":
+    main()
+</pre>
+    </div>
+    <footer>
+      Made in pure HTML/CSS by Kevin Dimaculangan
+      <br>
+      You can <a href="https://github.com/therealkevind/sca2-home-exercises">fork me on GitHub</a>, I guess.
+    </footer>
+  </body>
+</html>

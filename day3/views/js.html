@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Day 3</title>
+    <link href="styles.css" type="text/css" rel="stylesheet" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/py">Python</a>
+        <a>JavaScript</a>
+      </nav>
+    </header>
+    <div id="main-content">
+      <h1>JavaScript code</h1>
+      <img src="https://raw.githubusercontent.com/voodootikigod/logo.js/master/js.svg" height=100>
+      <p>Here's a few of the more interesting snippets I've written. In no particular order:</p>
+      <p>
+        Returns a string in the form <code>"Today's date is January 1st, 1970. It is twelve o'clock at night."</code>
+      </p>
+      <pre>
+const announceDate = (()=>{
+  const digits = "one two three four five six seven eight nine".split(" ");
+  const hourNames = ["twelve", ...digits, "eleven"];
+  const minNames = ["o'clock"].concat(
+    digits.map(i=>`oh-${i}`),
+    "eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split(" "),
+    ...["twenty", "thirty", "forty", "fifty"].map(i => [i, ...digits.map(e => `${i}-${e}`)]),
+  );
+  return function() {
+    const now = new Date();
+    const month = now.toLocaleDateString("en-US", {month: "long"}),
+      day = now.getDate(),
+      year = now.getFullYear();
+    const hours = now.getHours(),
+      mins = now.getMinutes();
+    return `Today's date is ${month} ${day}${
+      (day > 20 || day < 10) && day % 10 < 4 ? ["th", "st", "nd", "rd"][day % 10] : "th"
+    }, ${year}. It is ${hourNames[hours % 12]} ${minNames[mins]} ${
+      hours < 6 || hours > 20 ? "at night"
+      : hours < 12 ? "in the morning"
+      : hours < 18 ? "in the afternoon" : "in the evening"
+    }.`;
+  };
+})();
+</pre>
+      <p>
+        Checks whether something contains a falsy value, or is one.
+      </p>
+      <pre>
+// This function ignores property getters, which could be randomized or have side-effects.
+const hasFalsyValue = (()=>{
+  const set = new WeakSet();
+  return obj => {
+    if (!obj) return true;
+    if (typeof obj === "object") {
+      // Give recursive objects the benefit of the doubt as we recurse.
+      if (set.has(obj)) return false;
+      set.add(obj);
+      try {
+        if (Object.values(obj).some(hasFalsyValue)) return true;
+      } finally {set.delete(obj)}
+    }
+    return false;
+  };
+})();
+</pre>
+      <p>
+        More to come soon, perhaps. In the meantime, you can check out my progress on GitHub.
+      </p>
+    </div>
+    <footer>
+      Made in pure HTML/CSS by Kevin Dimaculangan
+      <br>
+      You can <a href="https://github.com/therealkevind/sca2-home-exercises">fork me on GitHub</a>, I guess.
+    </footer>
+  </body>
+</html>

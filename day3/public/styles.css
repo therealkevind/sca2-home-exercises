@@ -1,3 +1,69 @@
+html {
+  height: 100%;
+}
+
 body {
-  background-color: #dfdfdf;
+  background-color: lightgray;
+  font-family: "Segoe UI", Calibri, sans-serif;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#main-content {
+  padding: 2em;
+  flex: 1 0 auto;
+  font-size: 12pt;  
+}
+
+pre, code {
+  font-family: "Consolas", monospace;
+  background: black;
+  color: lightgray;
+  overflow: auto;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+header, footer {
+  position: sticky;
+  top: 0;
+  background: #555;
+  color: lightgray;
+  user-select: none;
+  padding: 5px;
+  font-size: 11pt;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+a {
+  color: white;
+}
+
+nav a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: #eee;
+}
+
+a:not([href]) {
+  color: gray;
+}
+
+a:active, a:focus {
+  outline: none;
+  color: lightgray;
+}
+
+nav > a:not(:last-child) {
+  margin-right: 5px;
+  padding-right: 5px;
+  border-right: solid lightgray 1px;
 }
