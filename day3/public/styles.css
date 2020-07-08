@@ -2,13 +2,24 @@ html {
   height: 100%;
 }
 
+@keyframes appear {
+  from {
+    opacity: 0;
+    background: white;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 body {
   background-color: lightgray;
   font-family: "Segoe UI", Calibri, sans-serif;
   margin: 0;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 100%;
+  animation: appear 0.3s ease-in;
 }
 
 #main-content {
@@ -19,17 +30,36 @@ body {
 
 pre, code {
   font-family: "Consolas", monospace;
-  background: black;
-  color: lightgray;
+}
+
+#main-content pre, #main-content code {
   overflow: auto;
   padding: 5px;
   border-radius: 5px;
+  border: solid black 1px;
+  background-color: #eee;
+  color: #333;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+#dark {
+  display: none;
+}
+
+label[for="dark"] {
+  cursor: pointer;
+  margin-left: auto;
+}
+
+#dark:checked ~ #main-content pre, #dark:checked ~ #main-content code {
+  background-color: black;
+  color: lightgray;
 }
 
 header, footer {
   position: sticky;
   top: 0;
-  background: #555;
+  background-color: #555;
   color: lightgray;
   user-select: none;
   padding: 5px;
@@ -41,7 +71,15 @@ nav {
   flex-wrap: wrap;
 }
 
-a {
+a, label[for="dark"] {
+  color: black;
+  outline: none;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+header a, footer a, label[for="dark"],
+#dark:checked ~ #main-content pre a,
+#dark:checked ~ #main-content code a {
   color: white;
 }
 
@@ -50,6 +88,12 @@ nav a {
 }
 
 a:visited {
+  color: #111;
+}
+
+header a:visited, footer a:visited,
+#dark:checked ~ #main-content pre a:visited,
+#dark:checked ~ #main-content code a:visited {
   color: #eee;
 }
 
@@ -58,11 +102,17 @@ a:not([href]) {
 }
 
 a:active, a:focus {
-  outline: none;
+  color: #333;
+}
+
+header a:active, header a:focus, footer a:active, footer a:focus,
+#dark:active + header label[for="dark"], #dark:focus + header label[for="dark"],
+#dark:checked ~ #main-content pre a:active, #dark:checked ~ #main-content pre a:focus,
+#dark:checked ~ #main-content code a:active, #dark:checked ~ #main-content code a:focus {
   color: lightgray;
 }
 
-nav > a:not(:last-child) {
+nav > a:not(:last-of-type) {
   margin-right: 5px;
   padding-right: 5px;
   border-right: solid lightgray 1px;

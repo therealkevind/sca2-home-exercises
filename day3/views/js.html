@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Day 3</title>
     <link href="styles.css" type="text/css" rel="stylesheet" />
+    <link href="https://sca2.homeacademies.com/favicon.ico" rel="icon" />
+    <title>JavaScript</title>
   </head>
   <body>
+    <input type="checkbox" checked id="dark">
     <header>
       <nav>
         <a href="/">Home</a>
         <a href="/about">About</a>
         <a href="/py">Python</a>
         <a>JavaScript</a>
+        <label for="dark">Toggle dark code</label>
       </nav>
     </header>
     <div id="main-content">
       <h1>JavaScript code</h1>
-      <img src="https://raw.githubusercontent.com/voodootikigod/logo.js/master/js.svg" height=100>
+      <img src="https://raw.githubusercontent.com/voodootikigod/logo.js/master/js.svg" alt="JavaScript logo" height=100>
       <p>Here's a few of the more interesting snippets I've written. In no particular order:</p>
       <p>
         Returns a string in the form <code>"Today's date is January 1st, 1970. It is twelve o'clock at night."</code>
@@ -72,7 +75,7 @@ const hasFalsyValue = (()=>{
       </p>
     </div>
     <footer>
-      Made in pure HTML/CSS by Kevin Dimaculangan
+      Made in pure HTML/CSS by Kevin Dimaculangan<noscript>; if you turn on JavaScript, it won't do anything but hide this <code>&lt;noscript&gt;</code> section.</noscript>
       <br>
       You can <a href="https://github.com/therealkevind/sca2-home-exercises">fork me on GitHub</a>, I guess.
     </footer>
