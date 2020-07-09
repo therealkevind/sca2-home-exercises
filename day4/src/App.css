@@ -2,14 +2,93 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100vw;
+  width: max-content;
+  margin: 0 auto;
+  padding: 5em;
+  border-radius: 5em;
+  background-color: lightgray;
+  user-select: none;
 }
 
-div {
-  display: flex;
+h1 {
+  font-variant-caps: petite-caps;
+  letter-spacing: 3px;
+  margin-top: 0;
 }
 
 form {
   display: flex;
   flex-direction: column;
+}
+
+input {
+  text-transform: lowercase;
+  border: solid white 1px;
+  background-color: white;
+  border-radius: 2px;
+  margin: 1px;
+  width: 15em;
+  box-sizing: border-box;
+  padding: 0;
+  outline: none;
+}
+
+.number-input {
+  padding-left: 0.1em;
+}
+
+input:focus {
+  border-color: black;
+}
+
+input:invalid:not(:placeholder-shown) {
+  border-color: red;
+}
+
+input:disabled {
+  background-color: lightgray;
+  border-color: #bbb;
+}
+
+.message {
+  text-transform: lowercase;
+}
+
+@keyframes appear {
+  from {
+    color: #0a0;
+  }
+  to {
+    color: darkgreen;
+  }
+}
+
+.win-message {
+  text-transform: uppercase;
+  animation: appear 0.2s ease-in both;
+  font-weight: bold;
+}
+
+@keyframes vibrate {
+  from {
+    margin-left: 0;
+  }
+  30% {
+    margin-left: 1em;
+  }
+  60% {
+    margin-left: -.5em;
+  }
+  to {
+    margin-left: 0;
+  }
+}
+
+.lose-message {
+  color: darkred;
+  animation: vibrate 0.2s ease-in-out both;
+}
+
+.streak-message {
+  font-style: italic;
 }
