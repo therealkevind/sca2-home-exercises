@@ -1,8 +1,12 @@
 import React from "react"
-import { Input } from "./styles"
+import { Input, Label } from "./styles"
 
-// TODO: Create a FormInput component that used the styled component Input
-// and whatever extra labels or text-based components and containers you wish!
-const FormInput = () => <Input />
+const FormInput = ({after, children, update, ...args}) => (
+  <Label>
+    {children}{" "}
+    <Input {...args} onChange={event => update(event.target.value)} />
+    {after}
+  </Label>
+);
 
-export default FormInput
+export default FormInput;

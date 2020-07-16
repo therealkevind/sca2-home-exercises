@@ -1,11 +1,13 @@
 import styled from "styled-components"
 import { Flex } from "@rebass/grid"
 
-// TODO: Container
-export const Container = styled(Flex)``
+export const FormContainer = styled(Flex)`
+  flex-direction: column;
+  font-family: ${({ theme }) => theme.fonts.primary.family};
+  font-weight: ${({ theme }) => theme.fonts.primary.weight};
+`;
 
-// TODO: FormContainer
-export const FormContainer = styled(Flex)``
-
-// TODO: Button
-export const Button = styled.button``
+export const Button = styled.button`
+  font-family: ${({theme}) => theme.fonts.primary.family};
+  font-weight: ${({theme}) => theme.fonts.primary.weight};
+`;
